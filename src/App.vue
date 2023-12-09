@@ -15,8 +15,6 @@ import Forecast from "@/components/Forecast.vue";
     <v-layout>
       <NavigationDrawer />
       <v-main class="d-block align-content-center align-center justify-center">
-        <h1>Algo aqui</h1>
-        <Count />
         <v-divider></v-divider>
         <Forecast />
       </v-main>
