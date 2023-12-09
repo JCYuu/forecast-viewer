@@ -1,23 +1,27 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import Count from "@/components/Count.vue";
+import Forecast from "@/components/Forecast.vue";
+
+
 </script>
 
 <template>
   <header>
-    Variables
 
   </header>
 
   <main>
-    <form action="submit">
+    <v-layout>
+      <NavigationDrawer />
+      <v-main class="d-block align-content-center align-center justify-center">
+        <h1>Algo aqui</h1>
+        <Count />
+        <v-divider></v-divider>
+        <Forecast />
+      </v-main>
+    </v-layout>
 
-
-    </form>
-  <div class="wrapper">
-    <Count />
-  </div>
   </main>
 </template>
 
