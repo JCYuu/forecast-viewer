@@ -5,6 +5,7 @@ import { loadFonts } from './plugins/webfontloader'
 import VueApexCharts from "vue3-apexcharts";
 import router from '@/router/router';
 
+
 loadFonts()
 
 createApp(App)
