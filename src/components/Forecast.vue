@@ -38,9 +38,9 @@
         weatherStatus: {1: "Soleado", 2: "Soleado con nubes", 3: "Nublado",
                         4: "Lluvia ligera", 5: "Lluvioso", 6: "Chubasco",
                         7: "Fuertes Lluvias", 8: "Tormenta"},
-        weatherIcons: { 1: "mdi-weather-sunny", 2: "mdi-weather-partly-cloudy", 3: "mdi-weather-cloudy",
-                        4: "mdi-weather-partly-rainy", 5: "mdi-weather-rainy", 6: "mdi-weather-pouring",
-                        7: "mdi-weather-lightning-rainy", 8: "mdi-weather-hurricane-outline"},
+        weatherIcons: { "Soleado": "mdi-weather-sunny", "Soleado con nubes": "mdi-weather-partly-cloudy", "Nublado": "mdi-weather-cloudy",
+                        "Lluvia ligera": "mdi-weather-partly-rainy", "Lluvioso": "mdi-weather-rainy", "Chubasco": "mdi-weather-pouring",
+                        "Fuertes Lluvias": "mdi-weather-lightning-rainy", "Tormenta": "mdi-weather-hurricane-outline"},
       }
     },
     methods: {
@@ -84,7 +84,7 @@
             </v-col>
             <v-col class="v-col px-0">
               <v-icon size="large">{{weatherIcons[region['weather']]}}</v-icon>
-              <span class="pa-2"> {{ weatherStatus[region['weather']] }} </span>
+              <span class="pa-2"> {{ region['weather'] }} </span>
             </v-col>
           </v-row>
           <v-card-text class="px-0 pb-0">
@@ -112,7 +112,7 @@
             <v-card-subtitle>Estado del tiempo Mañana</v-card-subtitle>
             <v-card-item>
               <v-icon>{{ weatherIcons[data['weather']] }}</v-icon>
-              {{ weatherStatus[data['weather']] }}
+              {{ data['weather'] }}
             </v-card-item>
             <v-card-subtitle>Velocidad del viento - Direccion</v-card-subtitle>
             <v-card-item class="d-flex justify-space-between text-justify">
@@ -122,7 +122,7 @@
             <v-card-subtitle>Estado del tiempo Tarde</v-card-subtitle>
             <v-card-item>
               <v-icon>{{ weatherIcons[data['weather_2']] }}</v-icon>
-              {{ weatherStatus[data['weather_2']] }}
+              {{ data['weather_2'] }}
             </v-card-item>
             <v-card-subtitle>Velocidad del viento - Direccion</v-card-subtitle>
             <v-card-item class="d-flex justify-space-between text-justify">

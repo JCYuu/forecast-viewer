@@ -30,7 +30,7 @@
 
   export default {
     data: () => ({
-      itemsPerPage: 5,
+      itemsPerPage: 15,
       headers: [
         {
           title: 'Fecha',
@@ -68,6 +68,9 @@
           height: 350,
           type: 'area'
         },
+        fill: {
+          type: 'gradient',
+        },
         dataLabels: {
           enabled: true
         },
@@ -79,6 +82,7 @@
         },
         labels: dates,
         xaxis: {
+          title: 'Regiones',
           categories: dates
         },
         yaxis: {
@@ -115,7 +119,6 @@
                 southTemps.temp.push(data.max_temp);
                 break;
             }
-            data.weather = this.weatherStatus[data.weather];
           }
           console.log(northTemps.temp);
           console.log(dates);
@@ -154,6 +157,7 @@
             }
           }],
           xaxis: {
+            title: 'Regiones',
             categories: dates
           },
           labels: dates,
