@@ -1,6 +1,6 @@
 # forecast-viewer
 
-A forecast component with Vuetify.js for the intranet project
+A forecast component with Vuetify.js for the intranet project, still testing so use run dev command
 
 ## Recommended IDE Setup
 
