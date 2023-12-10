@@ -1,6 +1,7 @@
 <script>
   import axios from "axios";
   const token = import.meta.env.VITE_APP_TOKEN;
+  if(!token) alert('APP_Token is not set, you will get an error, please log in and set credentials')
   const config = {
     headers: { Authorization: `Bearer ${token}`},
   }
