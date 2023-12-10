@@ -22,16 +22,15 @@
     let regions = {};
     for (const data of forecasts) {
     if (data['date'] !== currentDate){
-      futureForecasts[forecastIndex] = regions;
       currentDate = data['date'];
       regions = {};
       forecastIndex++;
       regionIndex = 0;
     }
       regions[regionIndex] = data;
+      futureForecasts[forecastIndex] = regions;
       console.log(data);
       regionIndex++;
-
     }
     console.log(futureForecasts)
     return futureForecasts;
@@ -47,16 +46,18 @@
                         7: "Fuertes Lluvias", 8: "Tormenta"},
         weatherIcons: { 1: "mdi-weather-sunny", 2: "mdi-weather-partly-cloudy", 3: "mdi-weather-cloudy",
                         4: "mdi-weather-partly-rainy", 5: "mdi-weather-rainy", 6: "mdi-weather-pouring",
-                        7: "mdi-weather-lightning-rainy", 8: "mdi-weather-hurricane-outline"}
+                        7: "mdi-weather-lightning-rainy", 8: "mdi-weather-hurricane-outline"},
       }
     },
     methods: {
       async fetchForecast(){
         try{
           const response = await axios('http://localhost:8000/api/weather', config);
+          console.log(response);
           console.log(response.data);
-          this.todayForecast = response.data.today.data;
-          this.nextForecast = parseFutureForecasts(response.data.forecasts.data);
+          console.log(response.data.forecasts);
+          this.todayForecast = response.data.today;
+          this.nextForecast = parseFutureForecasts(response.data.forecasts);
           console.log(this.nextForecast)
 
 
@@ -75,6 +76,9 @@
           console.error(e);
         }
       }
+    },
+    updated() {
+      this.fetchForecast();
     },
     mounted(){
       this.fetchForecast();
