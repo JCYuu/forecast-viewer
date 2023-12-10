@@ -1,16 +1,9 @@
 <script>
   import axios from "axios";
-  const token = "1|RXFFpicTbNIZxrbC25ZTwkhhS3yoHdq4nVpJOQtz92d4ade7"
+  const token = import.meta.env.VITE_APP_TOKEN;
   const config = {
     headers: { Authorization: `Bearer ${token}`},
   }
-
-/*  function parseFutureForecasts(forecasts){
-    this.nextForecast = {}
-    for (const date in forecasts) {
-      this.nextForecast[0].append({})
-    }
-  }*/
 
   function parseFutureForecasts(forecasts){
     console.log(forecasts)
@@ -59,19 +52,6 @@
           this.todayForecast = response.data.today;
           this.nextForecast = parseFutureForecasts(response.data.forecasts);
           console.log(this.nextForecast)
-
-
-          // console.log(`Today: ${JSON.stringify(this.forecast.data)}`);
-          /*for (const item in this.forecast) {
-            console.log(item)
-            this.text.concat(`${item}\n'}`);
-          }*/
-         /* this.text = JSON.stringify(this.forecast);*/
-         /* axios.request({
-            headers:{ Authorization: `Bearer ${token}` },
-            method: 'GET',
-            url: 'http://localhost:8000/api/weather'
-          }).then(res => { console.log(res.data) });*/
         } catch(e){
           console.error(e);
         }
@@ -90,7 +70,7 @@
 <template>
   <div class="today-forecast pa-3 align-content-center" v-if="todayForecast !== null">
     <h2>Fecha de hoy: {{ todayForecast[0]['date'] }}</h2>
-    <div class="forecast-container align-content-center justify-space-between pa-3 d-md-flex flex-wrap">
+    <div class="forecast-container align-content-center justify-space-around pa-3 d-md-flex flex-wrap">
       <v-card v-for="region in todayForecast" class="mx-md-3 px-1 mx-auto my-3" min-width="280">
         <template v-slot:title>
           <v-icon icon="mdi-clouds"></v-icon>
@@ -156,65 +136,6 @@
       <h3>No hay datos</h3>
     </div>
   </div>
-
-
-
-<!--  EJEMPLO-->
-<!--  <v-card
-      class="mx-auto"
-      max-width="368"
-  >
-    <v-card-item title="Florida">
-      <template v-slot:subtitle>
-        <v-icon
-            icon="mdi-alert"
-            size="18"
-            color="error"
-            class="me-1 pb-1"
-        ></v-icon>
-
-        Extreme Weather Alert
-      </template>
-    </v-card-item>
-
-    <v-card-text class="py-0">
-      <v-row align="center" no-gutters>
-        <v-col
-            class="text-h2"
-            cols="6"
-        >
-          64&deg;F
-        </v-col>
-
-        <v-col cols="6" class="text-right">
-          <v-icon
-              color="error"
-              icon="mdi-weather-hurricane"
-              size="88"
-          ></v-icon>
-        </v-col>
-      </v-row>
-    </v-card-text>
-
-    <div class="d-flex py-3 justify-space-between">
-      <v-list-item
-          density="compact"
-          prepend-icon="mdi-weather-windy"
-      >
-        <v-list-item-subtitle>123 km/h</v-list-item-subtitle>
-      </v-list-item>
-
-      <v-list-item
-          density="compact"
-          prepend-icon="mdi-weather-pouring"
-      >
-        <v-list-item-subtitle>48%</v-list-item-subtitle>
-      </v-list-item>
-    </div>
-  </v-card>-->
-
-
-
 </template>
 
 <style scoped>

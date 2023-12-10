@@ -1,9 +1,14 @@
 <script>
   import axios from "axios";
-  const token = "1|RXFFpicTbNIZxrbC25ZTwkhhS3yoHdq4nVpJOQtz92d4ade7";
+
+  const token = import.meta.env.VITE_APP_TOKEN;
   const config = {
     headers: { Authorization: `Bearer ${token}`},
   }
+  let northTemps = { temp: [] };
+  let centerTemps = { temp: [] };
+  let southTemps = { temp: [] };
+  let dates = [];
 
   const apiControl = {
     async fetch({ page, itemsPerPage, sortBy }){
@@ -47,6 +52,43 @@
                       4: "Lluvia ligera", 5: "Lluvioso", 6: "Chubasco",
                       7: "Fuertes Lluvias", 8: "Tormenta"},
       itemsPerPageOption: [5, 10, 25, 50, 75, 100],
+      series: [{
+        name: 'Norte',
+        data: northTemps.temp
+      }, {
+        name: 'Centro',
+        data: centerTemps.temp
+      }, {
+        name: 'Sur',
+        data: southTemps.temp
+      }],
+      options: {
+        chart: {
+          height: 350,
+          type: 'area'
+        },
+        dataLabels: {
+          enabled: true
+        },
+        theme: {
+          mode: 'dark'
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+        labels: dates,
+        xaxis: {
+          categories: dates
+        },
+        yaxis: {
+          title: 'Max_temp \u00B0C'
+        },
+        tooltip: {
+          x: {
+            format: 'dd/MM/yy HH:mm'
+          },
+        },
+      },
     }),
     methods: {
       async loadItems ({ page, itemsPerPage, sortBy }) {
@@ -55,39 +97,81 @@
         apiControl.fetch({ page, itemsPerPage, sortBy }).then(({ items, total })=>{
           this.serverItems = items;
           this.totalItems = total;
+          northTemps = { temp: [] };
+          centerTemps = { temp: [] };
+          southTemps = { temp: [] };
+          dates = [];
           for (const data of this.serverItems) {
+            if(dates.indexOf(data.date) === -1) dates.push(data.date);
+            switch(data.region){
+              case 'Norte':
+                northTemps.temp.push(data.max_temp);
+                break;
+              case 'Centro':
+                centerTemps.temp.push(data.max_temp);
+                break;
+              case 'Sur':
+                southTemps.temp.push(data.max_temp);
+                break;
+            }
             data.weather = this.weatherStatus[data.weather];
           }
+          console.log(northTemps.temp);
+          console.log(dates);
+          console.log(centerTemps.temp);
+          console.log(southTemps.temp);
           this.loading = false;
+          this.updateChart();
         })
 
-
-
-        // const sort = JSON.parse(JSON.stringify(sortBy))
-
-
-
-       /* console.log(response);
-        console.log(response.data.today);
-        console.log(response.data.today.data);*/
-      /*  this.serverItems = response.data.today.data;
-
-        console.log(this.serverItems);
-        this.totalItems = response.data.today.total;
-        this.loading = false;*/
-        /*FakeAPI.fetch({ page, itemsPerPage, sortBy }).then(({ items, total }) => {
-          this.serverItems = items
-          this.totalItems = total
-          this.loading = false
-        })*/
       },
+      updateChart() {
+        this.series = [{
+          name: 'Norte',
+          data: northTemps.temp
+        }, {
+          name: 'Centro',
+          data: centerTemps.temp
+        }, {
+          name: 'Sur',
+          data: southTemps.temp
+        }]
+        this.options = {
+          chart: {
+            height: 350,
+            type: 'area'
+          },
+          dataLabels: {
+            enabled: true
+          },
+          stroke: {
+            curve: 'smooth'
+          },
+          yaxis: [{
+            title: {
+              text: 'Max_temp \u00B0C'
+            }
+          }],
+          xaxis: {
+            categories: dates
+          },
+          labels: dates,
+          tooltip: {
+            x: {
+              format: 'dd/MM/yy HH:mm'
+            },
+          },
+        }
+      }
     },
   }
 
 </script>
 
 <template>
-
+  <v-container class="mx-auto">
+    <apexchart  type="area" :options="options" :series="series"></apexchart>
+  </v-container>
   <v-container>
     <h3>Registro de pronósticos</h3>
     <v-data-table-server
@@ -101,7 +185,6 @@
         :items-per-page-options="itemsPerPageOption"
         item-value="name"
         @update:options="loadItems"
-
     ></v-data-table-server>
   </v-container>
 </template>
