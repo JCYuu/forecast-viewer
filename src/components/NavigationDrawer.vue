@@ -13,8 +13,12 @@
     <v-list>
       <v-list-item title="Menú" subtitle="Consultas"></v-list-item>
       <v-divider></v-divider>
-      <v-list-item class="mt-7 py-2" link title="Diario y futuros pronósticos"></v-list-item>
-      <v-list-item class="py-2" link title="Registro de pronósticos"></v-list-item>
+      <router-link to="/">
+        <v-list-item class="mt-7 py-2" link title="Diario y futuros pronósticos"></v-list-item>
+      </router-link>
+      <router-link to="/tables">
+        <v-list-item class="py-2" link title="Registro de pronósticos"></v-list-item>
+      </router-link>
     </v-list>
   </v-navigation-drawer>
   <v-app-bar class="text-uppercase" title="Pronósticos">

@@ -1,6 +1,5 @@
 <script setup>
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
-import Count from "@/components/Count.vue";
 import Forecast from "@/components/Forecast.vue";
 
 
@@ -16,7 +15,7 @@ import Forecast from "@/components/Forecast.vue";
       <NavigationDrawer />
       <v-main class="d-block align-content-center align-center justify-center">
         <v-divider></v-divider>
-        <Forecast />
+        <router-view />
       </v-main>
     </v-layout>
 
