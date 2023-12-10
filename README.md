@@ -1,6 +1,6 @@
 # forecast-viewer
 
-This template should help get you started developing with Vue 3 in Vite.
+A forecast component with Vuetify.js for the intranet project
 
 ## Recommended IDE Setup
 
