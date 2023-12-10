@@ -1,5 +1,6 @@
 <script>
   import axios from "axios";
+  import {fi} from "vuetify/locale";
 
   const token = import.meta.env.VITE_APP_TOKEN;
   if(!token) alert('APP_Token is not set, you will get an error, please log in and set credentials')
@@ -12,15 +13,17 @@
   let dates = [];
 
   const apiControl = {
-    async fetch({ page, itemsPerPage, sortBy }){
+    async fetch({ page, itemsPerPage, sortBy}, region){
+      if(region === 'Todas') region = undefined;
+      let regFilter = (region) ? `&region[eq]=${region}` : '';
       return new Promise(async resolve => {
         let response = '';
         if(sortBy.length){
           let sortKey = sortBy[0].key;
           let sortOrder = sortBy[0].order;
-          response = await axios(`http://localhost:8000/api/weather/all/today?pages=${itemsPerPage}&page=${page}&ob[${sortOrder}]=${sortKey}`, config);
+          response = await axios(`http://localhost:8000/api/weather/all/today?pages=${itemsPerPage}&page=${page}&ob[${sortOrder}]=${sortKey}${regFilter}`, config);
         }
-        else response = await axios(`http://localhost:8000/api/weather/all/today?pages=${itemsPerPage}&page=${page}`, config);
+        else response = await axios(`http://localhost:8000/api/weather/all/today?pages=${itemsPerPage}&page=${page}${regFilter}`, config);
         let items = response.data.today.data;
         let total = response.data.today.total;
         resolve({ items: items, total: total });
@@ -29,8 +32,17 @@
   }
 
   export default {
+    computed: {
+      fi() {
+        return fi
+      }
+    },
     data: () => ({
+      selectData: ['Todas', 'Norte', 'Centro', 'Sur'],
+      selectedRegion: undefined,
       itemsPerPage: 15,
+      page: 1,
+      sortMethod: undefined,
       headers: [
         {
           title: 'Fecha',
@@ -38,7 +50,7 @@
           sortable: true,
           key: 'date',
         },
-        { title: 'Región', key: 'region', align: 'end' },
+        { title: 'Región', sortable: false, key: 'region', align: 'end' },
         { title: 'Clima', key: 'weather', align: 'end' },
         { title: 'Temperatura \u00B0C', key: 'max_temp', align: 'end' },
         { title: 'Velocidad min Viento Km/h', key: 'wind_speed', align: 'end' },
@@ -99,7 +111,11 @@
       async loadItems ({ page, itemsPerPage, sortBy }) {
         this.loading = true
         console.log({ page, itemsPerPage, sortBy });
-        apiControl.fetch({ page, itemsPerPage, sortBy }).then(({ items, total })=>{
+        this.page = page;
+        this.itemsPerPage = itemsPerPage;
+        this.sortMethod = sortBy;
+        console.log('Region:', this.selectedRegion)
+        apiControl.fetch({ page, itemsPerPage, sortBy }, this.selectedRegion).then(({ items, total })=>{
           this.serverItems = items;
           this.totalItems = total;
           northTemps = { temp: [] };
@@ -120,14 +136,15 @@
                 break;
             }
           }
-          console.log(northTemps.temp);
-          console.log(dates);
-          console.log(centerTemps.temp);
-          console.log(southTemps.temp);
           this.loading = false;
           this.updateChart();
         })
 
+      },
+      async filterRegion(){
+        setTimeout(async ()=> {
+          await this.loadItems({page: this.page, itemsPerPage: this.itemsPerPage, sortBy: this.sortMethod});
+        }, 300);
       },
       updateChart() {
         this.series = [{
@@ -179,6 +196,7 @@
   </v-container>
   <v-container>
     <h3>Registro de pronósticos</h3>
+    <v-select class="my-3" @update:model-value="filterRegion" label="Filtrar por región" v-model="selectedRegion" :items="selectData"></v-select>
     <v-data-table-server
         class="my-2"
         v-model:items-per-page="itemsPerPage"
@@ -188,6 +206,7 @@
         :loading="loading"
         :search="search"
         :items-per-page-options="itemsPerPageOption"
+        items-per-page-text="Pronósticos por página"
         item-value="name"
         @update:options="loadItems"
     ></v-data-table-server>
